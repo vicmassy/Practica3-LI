@@ -42,13 +42,18 @@ writeClauses:- eachXYexactlyOneB, eachBexactlyOneXY, calculateFills, true.
 eachXYexactlyOneB :- xCoord(X), yCoord(Y), findall(fills-B-X-Y, rect(B), Lits), atMost(1,Lits), fail.
 eachXYexactlyOneB.
 
-eachBexactlyOneXY :- rect(B), findall(starts-B-X-Y, goodPos(B, X, Y), Lits), exactly(1,Lits),fail.
+eachBexactlyOneXY :- rect(B), findall(starts-B-X-Y, goodPos(B, X, Y), Lits), atLeast(1,Lits),fail.
 eachBexactlyOneXY.
 
 calculateFills :- rect(B), goodPos(B, X, Y), calculate2(starts-B-X-Y), fail.
 calculateFills.
 
-calculate2(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact)), Lits), expressAnd(starts-B-X-Y, Lits).
+calculate2(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, 
+							findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact)), Lits), 
+							expressAnd(starts-B-X-Y, Lits),
+							findall(fills-B-X2-Y2, (insideTable(X2,Y2), \+(member(fills-B-X2-Y2,Lits))), Lits2),
+							negateAll(Lits2, NLits2),
+							expressAnd(starts-B-X-Y, NLits2).
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% show the solution. Here M contains the literals that are true in the model:

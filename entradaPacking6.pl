@@ -4,3 +4,4 @@ height(5).
 
 % rect(pieceNum,pieceWidth,pieceHeight)
 rect(1,1,1).
+rect(2,2,2).
