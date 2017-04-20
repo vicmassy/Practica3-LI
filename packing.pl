@@ -42,13 +42,13 @@ writeClauses:- eachXYexactlyOneB, eachBexactlyOneXY,aux, true.
 eachXYexactlyOneB :- xCoord(X), yCoord(Y), findall(fills-B-X-Y, rect(B), Lits), atMost(1,Lits), fail.
 eachXYexactlyOneB.
 
-eachBexactlyOneXY :- rect(B), findall(starts-B-X-Y, goodPos(B, X, Y), Lits), atLeast(1,Lits),fail.
+eachBexactlyOneXY :- rect(B), findall(starts-B-X-Y, goodPos(B, X, Y), Lits), exactly(1,Lits),fail.
 eachBexactlyOneXY.
 
-aux :- rect(B), insideTable(X, Y), calculate(starts-B-X-Y), fail.
+aux :- rect(B), goodPos(B, X, Y), calculate(starts-B-X-Y), fail.
 aux.
 
-calculate(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact), insideTable(Xact,Yact)), Lits), expressAnd(starts-B-X-Y, Lits).
+calculate(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact)), Lits), expressAnd(starts-B-X-Y, Lits).
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% show the solution. Here M contains the literals that are true in the model:
