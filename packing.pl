@@ -37,7 +37,7 @@ goodPos(B, X, Y) :- height(H), width(W), height(B, H2), width(B, W2),
 % starts-B-X-Y:   box B has its left-bottom cell with upper-right coordinates (X,Y)
 % fills-B-X-Y:   box B fills cell with upper-right coordinates (X,Y)
 
-writeClauses:- eachXYexactlyOneB, eachBexactlyOneXY,aux, true.
+writeClauses:- eachXYexactlyOneB, eachBexactlyOneXY, calculateFills, true.
 
 eachXYexactlyOneB :- xCoord(X), yCoord(Y), findall(fills-B-X-Y, rect(B), Lits), atMost(1,Lits), fail.
 eachXYexactlyOneB.
@@ -45,10 +45,10 @@ eachXYexactlyOneB.
 eachBexactlyOneXY :- rect(B), findall(starts-B-X-Y, goodPos(B, X, Y), Lits), exactly(1,Lits),fail.
 eachBexactlyOneXY.
 
-aux :- rect(B), goodPos(B, X, Y), calculate(starts-B-X-Y), fail.
-aux.
+calculateFills :- rect(B), goodPos(B, X, Y), calculate2(starts-B-X-Y), fail.
+calculateFills.
 
-calculate(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact)), Lits), expressAnd(starts-B-X-Y, Lits).
+calculate2(starts-B-X-Y) :- height(B, H), width(B, W), Xmax is X+W-1, Ymax is Y+H-1, findall(fills-B-Xact-Yact, (between(X, Xmax, Xact), between(Y, Ymax, Yact)), Lits), expressAnd(starts-B-X-Y, Lits).
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% show the solution. Here M contains the literals that are true in the model:
